@@ -21,8 +21,14 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    otp:{
+        type:String
+    },
+    isVerified:{
+        type:Boolean,
+        default:false
     }
-
 },{
     collection:"Users"
 });

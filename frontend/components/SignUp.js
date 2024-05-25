@@ -20,6 +20,28 @@ const SignUp = ({ navigation }) => {
         phone: '',
         password: '',
     });
+
+    const handleVerification = async(method)=>{
+        const {email}=form;
+        try {
+            const res = await api.post('/send-otp',{
+                email: method === 'email' ? email:null,
+            })
+            if (res.data.success) {
+                Alert.alert("OTP Sent", `OTP sent to your email`);
+                navigation.navigate('OTPVerify', {
+                    email: method === 'email' ? email : null,
+                    method
+                });
+            } else {
+                Alert.alert("Error", "Failed to send OTP. Please try again.");
+            }
+        } catch (error) {
+            console.error('OTP Send Error!', error);
+            Alert.alert("Error", "An error occurred while sending OTP. Please try again.");
+            
+        }
+    }
     const handleSignup = async()=>{
         const {email,username,phone,password} = form;
         try {
@@ -115,10 +137,16 @@ const SignUp = ({ navigation }) => {
                         </View>
 
                         <View>
-                            <TouchableOpacity
+                        <TouchableOpacity
                                 onPress={handleSignup}>
                                 <View style={styles.btn}>
                                     <Text style={styles.btnText}>SignUp</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableOpacity
+                                onPress={()=>handleVerification('email')}>
+                                <View style={styles.btn}>
+                                    <Text style={styles.btnText}>Verify via Email</Text>
                                 </View>
                             </TouchableOpacity>
                         </View>
